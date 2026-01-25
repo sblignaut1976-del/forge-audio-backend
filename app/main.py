@@ -45,6 +45,14 @@ app.include_router(jobs.router)
 async def root():
     return {"message": "Welcome to Forge Audio API", "status": "online"}
 
+@app.get("/debug-cors")
+async def debug_cors():
+    return {
+        "env_var": os.getenv("CORS_ORIGINS"),
+        "parsed_origins": origins,
+        "allow_all": "*" in origins
+    }
+
 @app.get("/health")
 async def health_check():
     return {"status": "healthy"}
