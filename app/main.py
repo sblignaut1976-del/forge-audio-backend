@@ -23,7 +23,11 @@ app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
 from .routes import upload, jobs
 
 # Configure CORS
-origins = os.getenv("CORS_ORIGINS", "http://localhost:3000").split(",")
+origins = [
+    origin.strip() 
+    for origin in os.getenv("CORS_ORIGINS", "http://localhost:3000").split(",") 
+    if origin.strip()
+]
 
 app.add_middleware(
     CORSMiddleware,
