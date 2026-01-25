@@ -32,7 +32,7 @@ async def process_audio_job(job_id: int):
             "drums": f"{api_url}/stems/1/drums.wav",
             "bass": f"{api_url}/stems/1/bass.wav",
             "other": f"{api_url}/stems/1/other.wav",
-            "backing"; f"{api_url}/stems/1/backing.wav"
+            "backing": f"{api_url}/stems/1/backing.wav"
         }
         job.status = "completed"
         db.commit()
