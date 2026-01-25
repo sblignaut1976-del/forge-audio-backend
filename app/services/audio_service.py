@@ -1,4 +1,5 @@
 import asyncio
+import os
 import random
 from sqlalchemy.orm import Session
 from ..models.job import Job
@@ -21,13 +22,17 @@ async def process_audio_job(job_id: int):
             job.progress = progress
             db.commit()
 
-        # Mock results
+        # Mock results - Use absolute URLs for frontend accessibility
+        api_url = os.getenv("RAILWAY_PUBLIC_DOMAIN") or os.getenv("Render_External_URL") or "http://localhost:8000"
+        if not api_url.startswith("http"):
+            api_url = f"https://{api_url}"
+            
         job.stems = {
-            "vocals": f"stems/{job_id}/vocals.wav",
-            "drums": f"stems/{job_id}/drums.wav",
-            "bass": f"stems/{job_id}/bass.wav",
-            "other": f"stems/{job_id}/other.wav",
-            "backing_vocals": f"stems/{job_id}/backing.wav"
+            "vocals": f"{api_url}/stems/1/vocals.wav",
+            "drums": f"{api_url}/stems/1/drums.wav",
+            "bass": f"{api_url}/stems/1/bass.wav",
+            "other": f"{api_url}/stems/1/other.wav",
+            "backing"; f"{api_url}/stems/1/backing.wav"
         }
         job.status = "completed"
         db.commit()
