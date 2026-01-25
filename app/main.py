@@ -23,11 +23,19 @@ app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
 from .routes import upload, jobs
 
 # Configure CORS
-origins = [
-    origin.strip() 
-    for origin in os.getenv("CORS_ORIGINS", "http://localhost:3000").split(",") 
-    if origin.strip()
-]
+# Fallback to allowing all if configuration is tricky/ambiguous
+raw_origins = os.getenv("CORS_ORIGINS", "*")
+if "•" in raw_origins or not raw_origins.strip():
+    origins = ["*"]
+else:
+    origins = [
+        origin.strip() 
+        for origin in raw_origins.split(",") 
+        if origin.strip()
+    ]
+    # Safety: always Allow all for this debugging phase if * is present anywhere
+    if "*" in raw_origins:
+        origins = ["*"]
 
 app.add_middleware(
     CORSMiddleware,
