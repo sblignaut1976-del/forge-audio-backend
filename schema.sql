@@ -4,8 +4,8 @@ CREATE TABLE IF NOT EXISTS jobs (
     filename TEXT NOT NULL,
     status TEXT DEFAULT 'pending', -- pending, processing, completed, failed
     progress FLOAT DEFAULT 0.0,
-    created_at TIMESTAMPTZ DEFAULT NOW(),
-    updated_at TIMESTAMPTZ DEFAULT NOW(),
+    created_at TIMESTAMPTZ DEFAULT now(),
+    updated_at TIMESTAMPTZ DEFAULT now(),
     stems JSONB, -- Store paths: {"vocals": "...", "drums": "...", ...}
     error_message TEXT
 );
