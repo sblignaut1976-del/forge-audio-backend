@@ -50,7 +50,7 @@ async def upload_audio(
     db.refresh(job)
     
     # Trigger separation process in background
-    background_tasks.add_task(process_audio_job, job.id)
+    background_tasks.add_task(process_audio_job, job.id, save_path)
     
     return {
         "job_id": job.id,

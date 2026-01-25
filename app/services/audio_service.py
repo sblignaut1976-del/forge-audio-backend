@@ -1,11 +1,12 @@
 import asyncio
 import os
+import shutil
 import random
 from sqlalchemy.orm import Session
 from ..models.job import Job
 from ..database import SessionLocal
 
-async def process_audio_job(job_id: int):
+async def process_audio_job(job_id: int, file_path: str = None):
     db = SessionLocal()
     try:
         job = db.query(Job).filter(Job.id == job_id).first()
@@ -14,6 +15,21 @@ async def process_audio_job(job_id: int):
 
         job.status = "processing"
         db.commit()
+
+        # Create output directory for this job
+        output_dir = f"stems/{job_id}"
+        os.makedirs(output_dir, exist_ok=True)
+
+        # Mock Processing: Just copy the source file to stem names if path exists
+        stem_names = ["vocals", "drums", "bass", "other", "backing"]
+        if file_path and os.path.exists(file_path):
+            for stem in stem_names:
+                dest = f"{output_dir}/{stem}.wav"
+                try:
+                    # In a real app we'd split. Here we mock by copying.
+                    shutil.copy2(file_path, dest)
+                except Exception as copy_err:
+                    print(f"Mock copy failed: {copy_err}")
 
         # Simulate processing steps
         steps = [0.2, 0.4, 0.6, 0.8, 1.0]
