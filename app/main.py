@@ -13,17 +13,20 @@ app = FastAPI(
 )
 
 # Create directories if they don't exist
-os.makedirs("uploads", exist_ok=True)
-os.makedirs("stems", exist_ok=True)
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+UPLOADS_DIR = os.path.join(BASE_DIR, "..", "uploads")
+STEMS_DIR = os.path.join(BASE_DIR, "..", "stems")
+
+os.makedirs(UPLOADS_DIR, exist_ok=True)
+os.makedirs(STEMS_DIR, exist_ok=True)
 
 # Serve static files for audio stems
-app.mount("/stems", StaticFiles(directory="stems"), name="stems")
-app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
+app.mount("/stems", StaticFiles(directory=STEMS_DIR), name="stems")
+app.mount("/uploads", StaticFiles(directory=UPLOADS_DIR), name="uploads")
 
-from .routes import upload, jobs
+from .routes import upload, jobs, download
 
 # Configure CORS
-# Fallback to allowing all if configuration is tricky/ambiguous
 raw_origins = os.getenv("CORS_ORIGINS", "*")
 if "•" in raw_origins or not raw_origins.strip():
     origins = ["*"]
@@ -33,7 +36,6 @@ else:
         for origin in raw_origins.split(",") 
         if origin.strip()
     ]
-    # Safety: always Allow all for this debugging phase if * is present anywhere
     if "*" in raw_origins:
         origins = ["*"]
 
@@ -48,6 +50,7 @@ app.add_middleware(
 # Register routes
 app.include_router(upload.router)
 app.include_router(jobs.router)
+app.include_router(download.router)
 
 @app.get("/")
 async def root():

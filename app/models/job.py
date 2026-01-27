@@ -12,6 +12,7 @@ class Job(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
     stems = Column(JSON, nullable=True)  # Store paths to separated stems: {"vocals": "...", "drums": "...", ...}
+    chords = Column(JSON, nullable=True) # Store detected chords: [{"time": 0.0, "chord": "C"}, ...]
     error_message = Column(String, nullable=True)
 
     def __repr__(self):
