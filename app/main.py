@@ -64,6 +64,14 @@ async def debug_cors():
         "allow_all": "*" in origins
     }
 
+@app.get("/version")
+async def version():
+    return {
+        "version": "1.0.1",
+        "commit": "eb976180ef9bf0336a1b76ca2448bde4f143cd2c",
+        "features": ["6-stem", "vocal-isolation-v2"]
+    }
+
 @app.get("/health")
 async def health_check():
     return {"status": "healthy"}
