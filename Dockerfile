@@ -36,6 +36,13 @@ COPY ./app /code/app
 COPY ./migrations /code/migrations
 COPY alembic.ini /code/alembic.ini
 
+# Create directories and non-root user
+RUN mkdir -p /code/uploads /code/stems && \
+    adduser --disabled-password --gecos "" appuser && \
+    chown -R appuser:appuser /code
+
+USER appuser
+
 EXPOSE 8000
 
 CMD ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}"]
