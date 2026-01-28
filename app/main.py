@@ -30,20 +30,31 @@ from .routes import upload, jobs, download
 
 # Configure CORS
 raw_origins = os.getenv("CORS_ORIGINS", "*")
-if "•" in raw_origins or not raw_origins.strip():
-    origins = ["*"]
+
+if "*" in raw_origins:
+    # If wildcard is requested with credentials, we must specify origins or use regex
+    # For security and spec compliance, we'll default to the production frontend + local
+    origins = [
+        "https://forge-audio-frontend.vercel.app",
+        "http://localhost:3000",
+        "http://localhost:5173",
+        "https://forge-audio-backend-production.up.railway.app" 
+    ]
 else:
+    # If specific origins listed in env, use them
     origins = [
         origin.strip() 
         for origin in raw_origins.split(",") 
         if origin.strip()
     ]
-    if "*" in raw_origins:
-        origins = ["*"]
+    
+# Add regex for Vercel preview deployments
+origin_regex = r"https://forge-audio-frontend.*\.vercel\.app"
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
+    allow_origin_regex=origin_regex,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
