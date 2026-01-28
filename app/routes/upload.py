@@ -55,7 +55,6 @@ async def upload_audio(
         # Create database entry
         job = Job(
             filename=file.filename,
-            file_path=save_path,
             status="pending"
         )
         db.add(job)

@@ -7,7 +7,6 @@ class Job(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     filename = Column(String, nullable=False)
-    file_path = Column(String, nullable=False)  # Path to the uploaded file on disk
     status = Column(String, default="pending")  # pending, processing, completed, failed
     progress = Column(Float, default=0.0)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
