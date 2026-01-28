@@ -22,6 +22,7 @@ MAX_FILE_SIZE = 50 * 1024 * 1024  # 50MB
 async def upload_audio(
     background_tasks: BackgroundTasks,
     file: UploadFile = File(...),
+    high_quality: bool = False,
     db: Session = Depends(get_db)
 ):
     try:
@@ -63,7 +64,7 @@ async def upload_audio(
         print(f"[UPLOAD] DB commit: {time.time() - start:.2f}s")
         
         # Trigger separation process in background
-        background_tasks.add_task(process_audio_job, job.id, save_path)
+        background_tasks.add_task(process_audio_job, job.id, save_path, high_quality)
         print(f"[UPLOAD] Background task added: {time.time() - start:.2f}s")
         
         return {

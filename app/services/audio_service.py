@@ -11,7 +11,7 @@ import logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-async def process_audio_job(job_id: int, file_path: str = None):
+async def process_audio_job(job_id: int, file_path: str = None, high_quality: bool = False):
     db = SessionLocal()
     job = None
     try:
@@ -73,8 +73,8 @@ async def process_audio_job(job_id: int, file_path: str = None):
                     stems_result['Other_Signal'] = f"/stems/{job_id}/{filename}"
             
             # Pass 2: Split Vocals into Lead and Backing Vocals if we have a vocals track
-            if vocals_filename:
-                print(f"[JOB] Job {job_id} Pass 2 (Karaoke) - Splitting vocals...")
+            if high_quality and vocals_filename:
+                print(f"[JOB] Job {job_id} Pass 2 (Karaoke) - Splitting vocals (High Quality)...")
                 vocals_full_path = os.path.join(output_dir, vocals_filename)
                 
                 # Load specialized Karaoke model
