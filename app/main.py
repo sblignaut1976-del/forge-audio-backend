@@ -13,9 +13,11 @@ app = FastAPI(
 )
 
 # Create directories if they don't exist
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-UPLOADS_DIR = os.path.join(BASE_DIR, "..", "uploads")
-STEMS_DIR = os.path.join(BASE_DIR, "..", "stems")
+# Use /tmp for writable storage in serverless/container environments
+import tempfile
+BASE_TEMP_DIR = os.path.join(tempfile.gettempdir(), "forge_audio")
+UPLOADS_DIR = os.path.join(BASE_TEMP_DIR, "uploads")
+STEMS_DIR = os.path.join(BASE_TEMP_DIR, "stems")
 
 os.makedirs(UPLOADS_DIR, exist_ok=True)
 os.makedirs(STEMS_DIR, exist_ok=True)

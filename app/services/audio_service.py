@@ -26,7 +26,8 @@ async def process_audio_job(job_id: int, file_path: str = None):
         db.commit()
 
         # Create output directory for this job (absolute path to be safe)
-        base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+        import tempfile
+        base_dir = os.path.join(tempfile.gettempdir(), "forge_audio")
         output_dir = os.path.join(base_dir, "stems", str(job_id))
         os.makedirs(output_dir, exist_ok=True)
 

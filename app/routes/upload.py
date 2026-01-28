@@ -10,7 +10,9 @@ import uuid
 
 router = APIRouter(prefix="/api/upload", tags=["upload"])
 
-UPLOAD_DIR = "uploads"
+import tempfile
+BASE_TEMP_DIR = os.path.join(tempfile.gettempdir(), "forge_audio")
+UPLOAD_DIR = os.path.join(BASE_TEMP_DIR, "uploads")
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 ALLOWED_EXTENSIONS = {".mp3", ".wav", ".ogg", ".flac"}

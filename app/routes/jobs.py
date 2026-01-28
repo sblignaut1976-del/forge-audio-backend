@@ -45,8 +45,9 @@ async def detect_chords(job_id: int, stem: str = None, db: Session = Depends(get
                     melodic_key = key
                     path = job.stems.get(key)
                     # Construct absolute path
-                    base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-                    stem_path = os.path.join(base_dir, path.lstrip('/'))
+                    import tempfile
+                    base_temp_dir = os.path.join(tempfile.gettempdir(), "forge_audio")
+                    stem_path = os.path.join(base_temp_dir, path.lstrip('/'))
                     print(f"[API] Targeted specific stem: {key} at {stem_path}")
                     break
         
@@ -56,8 +57,9 @@ async def detect_chords(job_id: int, stem: str = None, db: Session = Depends(get
                 path = job.stems.get(key)
                 if path:
                     melodic_key = key
-                    base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-                    stem_path = os.path.join(base_dir, path.lstrip('/'))
+                    import tempfile
+                    base_temp_dir = os.path.join(tempfile.gettempdir(), "forge_audio")
+                    stem_path = os.path.join(base_temp_dir, path.lstrip('/'))
                     print(f"[API] Found default melodic stem: {key} at {stem_path}")
                     break
 
