@@ -44,8 +44,9 @@ async def process_audio_job(job_id: int, file_path: str = None, high_quality: bo
             # Run the blocking separation in a thread pool
             loop = asyncio.get_event_loop()
             
-            # Use htdemucs_6s for native 6-stem separation
-            separator.load_model('htdemucs_6s.yaml')
+            # Use htdemucs (4-stem) for stability on CPU/Low-RAM environments
+            # htdemucs_6s is too heavy and causes OOM crashes on standard instances
+            separator.load_model('htdemucs.yaml')
             output_files = await loop.run_in_executor(None, separator.separate, file_path)
             
             job.progress = 0.6
