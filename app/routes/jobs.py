@@ -20,7 +20,6 @@ async def get_job_status(job_id: int, db: Session = Depends(get_db)):
         "status": job.status,
         "progress": job.progress,
         "stems": job.stems,
-        "chords": job.chords,
         "error": job.error_message
     }
 
@@ -76,9 +75,9 @@ async def detect_chords(job_id: int, stem: str = None, db: Session = Depends(get
         # Run blocking chord detection in a separate thread to keep event loop free
         chords = await asyncio.to_thread(chord_service.detect_chords, stem_path)
         
-        job.chords = chords
-        db.commit()
-        print(f"[API] Analysis successful. {len(chords)} chords saved.")
+        # job.chords = chords # Column does not exist in production
+        # db.commit()
+        print(f"[API] Analysis successful. {len(chords)} chords saved (in-memory only).")
         return {"status": "success", "chords": chords, "analyzed_stem": melodic_key}
     except Exception as e:
         print(f"[API] Analysis failed: {str(e)}")
