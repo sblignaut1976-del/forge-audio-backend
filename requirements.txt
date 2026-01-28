@@ -14,12 +14,12 @@ alembic==1.13.1
 
 # Audio Processing
 audio-separator==0.41.1
-librosa==0.10.1
-soundfile==0.12.1
-numpy==1.26.3
+librosa>=0.10.1
+soundfile>=0.12.1
+numpy>=2.0.0
 aiofiles==23.2.1
 zipstream-ng==1.7.1
-onnxruntime==1.23.2
+onnxruntime>=1.17.0
 
 # CORS & Middleware
 python-multipart==0.0.6
