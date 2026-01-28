@@ -24,11 +24,6 @@ onnxruntime>=1.17.0
 # CORS & Middleware
 python-multipart==0.0.6
 
-# Testing
-pytest==7.4.3
-pytest-asyncio==0.23.3
-httpx==0.26.0
-
-# Utilities
+# utilities
 python-jose[cryptography]==3.3.0
 passlib[bcrypt]==1.7.4

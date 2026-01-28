@@ -1,26 +1,41 @@
+# Stage 1: Builder
+FROM python:3.11-slim as builder
+
+WORKDIR /code
+
+# Install build dependencies
+RUN apt-get update && apt-get install -y \
+    gcc \
+    libpq-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY requirements.txt .
+
+# Install dependencies including a forced CPU-only torch to save massive space
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir torch torchaudio --index-url https://download.pytorch.org/whl/cpu && \
+    pip install --no-cache-dir -r requirements.txt
+
+# Stage 2: Runtime
 FROM python:3.11-slim
 
 WORKDIR /code
 
-# Install system dependencies for audio processing
+# Install runtime dependencies (ffmpeg is essential)
 RUN apt-get update && apt-get install -y \
     ffmpeg \
-    libpq-dev \
-    gcc \
+    libpq5 \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Python dependencies
-COPY requirements.txt .
-RUN pip install --no-cache-dir --upgrade pip && \
-    pip install --no-cache-dir -r requirements.txt
+# Copy only the installed packages from builder
+COPY --from=builder /usr/local/lib/python3.11/site-packages /usr/local/lib/python3.11/site-packages
+COPY --from=builder /usr/local/bin /usr/local/bin
 
-# Copy application code and migration files
+# Copy application code
 COPY ./app /code/app
 COPY ./migrations /code/migrations
 COPY alembic.ini /code/alembic.ini
 
-# Expose port (Railway will override this with $PORT)
 EXPOSE 8000
 
-# Run application
 CMD ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}"]

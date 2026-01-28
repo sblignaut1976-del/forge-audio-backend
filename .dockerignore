@@ -8,3 +8,9 @@ tests/
 Dockerfile
 railway.json
 README.md
+stems/
+uploads/
+.venv/
+.DS_Store
+*.db
+*.log
